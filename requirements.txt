@@ -1,0 +1,6 @@
+pandas
+numpy
+seaborn 
+matplotlib
+streamlit
+stramlit_tags
