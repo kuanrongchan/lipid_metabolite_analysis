@@ -98,13 +98,13 @@ def data_handler(df_dict, df_names):
     
     return cleaned_dict, log2fcs
 
-def cluster(df_dict, z_score=None, datatype = 'z-score', width=5, height=10, dendrogram_r = 0.2, dendrogram_c = 0.2, vminmax = (-5,5)):
+def cluster(df_dict, z_score=None, datatype = 'z-score', width=5, height=10, dendrogram_r = 0.2, dendrogram_c = 0.2, vminmax = (-5,5), cbar_left = 0.98, cbar_bottom = 0.05, cbar_width = 0.15, cbar_height = 0.02):
     if vminmax == (0.0, 0.0):
         vminmax = (None, None)
     for k,df in df_dict.items():
         g = sns.clustermap(df, cmap="vlag",
                         method='average',
-                        cbar_pos=(0.95, 0.1, 0.15, 0.03),
+                        cbar_pos=(cbar_left, cbar_bottom, cbar_width, cbar_height),
                         center=0, 
                         vmin = vminmax[0], vmax = vminmax[1],
                         z_score=z_score,
@@ -164,6 +164,10 @@ with cluster_exp:
     dendrogram_r = st.slider("Adjust relative row dendrogram length", min_value=0.01, max_value=1.00, step=0.01, value=0.20)
     dendrogram_c = st.slider("Adjust relative column dendrogram height", min_value=0.01, max_value=1.00, step=0.01, value=0.20)
     vminmax = st.slider("Adjust minimum and maximum values of the colour bar", min_value=-10.0, max_value=10.0, step = 0.5, value=(0.0, 0.0))
+    cbar_left = st.slider("Adjust colourbar position from left", min_value=0.0, max_value=1.0, step=0.01, value = 0.98)
+    cbar_bottom = st.slider("Adjust colourbar position from bottom", min_value=0.0, max_value=1.0, step=0.01, value = 0.02)
+    cbar_width = st.slider("Adjust colourbar width", min_value=0.0, max_value=1.0, step=0.01, value = 0.15)
+    cbar_height = st.slider("Adjust colourbar height", min_value=0.0, max_value=1.0, step=0.01, value = 0.03)
     aesthetics_complete = st.checkbox("Finished editing clustermap aesthetics", value=True)
 
 
@@ -171,8 +175,18 @@ z_cluster, fc_cluster = st.tabs(["Z-score clustermap", 'Log2FC clustermap'])
 
 with z_cluster:
     if aesthetics_complete:
-        cluster(df_dict, z_score=0, datatype='z-score', width=width, height=height, dendrogram_r = dendrogram_r, dendrogram_c=dendrogram_c, vminmax=vminmax)
+        cluster(df_dict, z_score=0, datatype='z-score',
+        width=width, height=height,
+        dendrogram_r = dendrogram_r, dendrogram_c=dendrogram_c,
+        vminmax=vminmax,
+        cbar_left=cbar_left, cbar_bottom=cbar_bottom, cbar_width=cbar_width, cbar_height=cbar_height
+        )
 
 with fc_cluster:
     if aesthetics_complete:
-        cluster(log2fc_dict, datatype='log2FC', z_score=None, width=width, height=height, dendrogram_r = dendrogram_r, dendrogram_c=dendrogram_c, vminmax=vminmax)
+        cluster(log2fc_dict, datatype='log2FC',
+        z_score=None, width=width, height=height,
+        dendrogram_r = dendrogram_r, dendrogram_c=dendrogram_c,
+        vminmax=vminmax,
+        cbar_left=cbar_left, cbar_bottom=cbar_bottom, cbar_width=cbar_width, cbar_height=cbar_height
+        )
