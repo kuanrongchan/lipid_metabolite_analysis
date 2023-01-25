@@ -1,1 +1,3 @@
-# lipid_metabolite_analysis
+# Lipid metabolite analysis webtool
+
+This webtool is built to facilitate researchers visualise their metabolite data quickly. To use this webtool, users will have to format the data.....
