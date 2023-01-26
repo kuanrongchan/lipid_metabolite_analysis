@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import io
+
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -125,14 +127,17 @@ def cluster(df_dict, z_score=None, datatype = 'z-score', width=5, height=10, den
         st.pyplot(g)
         return g
 
-def create_pdf(fig, fn):
-    fig.savefig(f"{fn}.pdf")
-    with open(f"{fn}.pdf", 'rb') as g:
-        st.download_button(
-            label = f"Download {fn.replace('_', ' ')} as pdf",
-            data = g,
-            file_name = f"{fn}.pdf",
-            mime='application/pdf'
+def create_pdf(fig, fn, graph_module = "pyplot"):
+    buf = io.BytesIO()
+    if graph_module == 'pyplot':
+        fig.savefig(buf, format = 'pdf', bbox_inches = 'tight')
+    elif graph_module == 'plotly':
+        fig.write_image(file = buf, format = 'pdf')
+    st.download_button(
+        label = f"Download {fn.replace('_', ' ')} as pdf",
+        data = buf,
+        file_name = f"{fn}.pdf",
+        mime='application/pdf'
         )
 
 ######## CONTROL FLOW ###########
@@ -196,7 +201,7 @@ with z_cluster:
         vminmax=vminmax,
         cbar_left=cbar_left, cbar_bottom=cbar_bottom, cbar_width=cbar_width, cbar_height=cbar_height
         )
-        create_pdf(zfig, "zscore_clustergram")
+        create_pdf(zfig, "zscore_clustergram", graph_module='pyplot')
 
 with fc_cluster:
     if aesthetics_complete:
@@ -206,4 +211,4 @@ with fc_cluster:
         vminmax=vminmax,
         cbar_left=cbar_left, cbar_bottom=cbar_bottom, cbar_width=cbar_width, cbar_height=cbar_height
         )
-        create_pdf(fcfig, "log2FC_clustergram")
+        create_pdf(fcfig, "log2FC_clustergram", graph_module='pyplot')
