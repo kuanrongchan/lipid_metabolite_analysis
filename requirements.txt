@@ -3,5 +3,5 @@ numpy
 seaborn 
 matplotlib
 streamlit
-stramlit_tags
+streamlit_tags
 openpyxl
