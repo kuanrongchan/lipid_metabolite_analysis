@@ -48,7 +48,7 @@ def log2fc(clean_dict, df_names):
 
 def data_handler(df_dict, df_names):
     cleaned_dict, metabolites, subjs = {}, [], []
-    transpose = datamanager.checkbox("Transpose my dataset", value=True, help="Transpose if your dataset has subjects in the rows and metabolites in columns.")
+    transpose = datamanager.checkbox("Transpose my dataset", value=False, help="Transpose if your dataset has subjects in the rows and metabolites in columns.")
     for k,v in df_dict.items():
         if transpose:
             numerics = v.select_dtypes(exclude='number')
@@ -174,15 +174,15 @@ df_dict, log2fc_dict = data_handler(df_dict, df_names)
 cluster_exp = st.sidebar.expander("Clustermap options", expanded=True)
 
 with cluster_exp:
-    width = st.slider("Clustermap width (in inches)", min_value=4, max_value=20, step=1, value = 5, key='width')
-    height = st.slider("Clustermap height (in inches)", min_value=4, max_value=40, step=1, value = 10, key='height')
-    dendrogram_r = st.slider("Adjust relative row dendrogram length", min_value=0.01, max_value=1.00, step=0.01, value=0.20)
-    dendrogram_c = st.slider("Adjust relative column dendrogram height", min_value=0.01, max_value=1.00, step=0.01, value=0.20)
-    vminmax = st.slider("Adjust minimum and maximum values of the colour bar", min_value=-10.0, max_value=10.0, step = 0.5, value=(0.0, 0.0))
-    cbar_left = st.slider("Adjust colourbar position from left", min_value=0.0, max_value=1.0, step=0.01, value = 0.98)
-    cbar_bottom = st.slider("Adjust colourbar position from bottom", min_value=0.0, max_value=1.0, step=0.01, value = 0.02)
+    width = st.slider("Clustermap width (in inches)", min_value=4, max_value=20, step=1, value = 7, key='width')
+    height = st.slider("Clustermap height (in inches)", min_value=4, max_value=40, step=1, value = 14, key='height')
+    dendrogram_r = st.slider("Adjust relative row dendrogram length", min_value=0.01, max_value=1.00, step=0.01, value=0.12)
+    dendrogram_c = st.slider("Adjust relative column dendrogram height", min_value=0.01, max_value=1.00, step=0.01, value=0.08)
+    vminmax = st.slider("Adjust minimum and maximum values of the colour bar", min_value=-10.0, max_value=10.0, step = 0.5, value=(-2.0, 2.0))
+    cbar_left = st.slider("Adjust colourbar position from left", min_value=0.0, max_value=1.0, step=0.01, value = 0.78)
+    cbar_bottom = st.slider("Adjust colourbar position from bottom", min_value=0.0, max_value=1.0, step=0.01, value = 0.05)
     cbar_width = st.slider("Adjust colourbar width", min_value=0.0, max_value=1.0, step=0.01, value = 0.15)
-    cbar_height = st.slider("Adjust colourbar height", min_value=0.0, max_value=1.0, step=0.01, value = 0.03)
+    cbar_height = st.slider("Adjust colourbar height", min_value=0.0, max_value=1.0, step=0.01, value = 0.02)
     aesthetics_complete = st.checkbox("Finished editing clustermap aesthetics", value=True)
 
 
