@@ -26,15 +26,15 @@ def file_upload():
 
     else:
         if use_demo:
-            data = st.cache(pd.read_excel)("mass spec data_lipids.xlsx", index_col=0)
-            df_dict["mass spec data_lipids"] = data
-            df_names.append("mass spec data_lipids")
+            data = st.cache(pd.read_csv)("Lipids_VMP1_TMEM41B_KO.csv", index_col=0)
+            df_dict["TMEM41B_VMP1_KO"] = data
+            df_names.append("TMEM41B_VMP1_KO")
         else:
             st.stop()
     return df_dict, df_names
 
 def log2fc(clean_dict, df_names):
-    control_cols = datamanager.multiselect("Select columns to be used as controls for log2 fold-change calculation", options = clean_dict[df_names[0]].columns.to_list())
+    control_cols = datamanager.multiselect("Select subjects to be used as controls for log2 fold-change calculation", options = clean_dict[df_names[0]].columns.to_list())
     log2FCs = {}
     for k,v in clean_dict.items():
         v = v.select_dtypes(include = np.number)
@@ -122,7 +122,18 @@ def cluster(df_dict, z_score=None, datatype = 'z-score', width=5, height=10, den
             spine.set_visible(True)
             spine.set_edgecolor("black")
 
-        st.pyplot(g, **dict(dpi = 600))
+        st.pyplot(g)
+        return g
+
+def create_pdf(fig, fn):
+    fig.savefig(f"{fn}.pdf")
+    with open(f"{fn}.pdf", 'rb') as g:
+        st.download_button(
+            label = f"Download {fn.replace('_', ' ')} as pdf",
+            data = g,
+            file_name = f"{fn}.pdf",
+            mime='application/pdf'
+        )
 
 ######## CONTROL FLOW ###########
 
@@ -135,15 +146,19 @@ st.markdown('''
 1. Upload mass spectrometry csv or xlsx files (without log-transformation)
 2. Transpose your dataset if your subjects are in rows and metabolites are in columns
 3. Use the data manager expander to filter out any metabolites or subjects
-4. Select the subjects to be used as controls for log2 fold-change calculation (subject vs control)
+4. Select the subjects to be used as controls for log2 fold-change calculation (subject vs averaged control)
 5. Tick the finished filtering checkbox once filtering is complete
 
 ### Clustermap aesthetics
 
 - Adjust the clustermap's width and height
-- Adjust the relative lengths and heights of the dendrograms 
-- Adjust the minimum and maximum values corresponding to the extreme ends of the colour bar.
+- Adjust the relative lengths and heights of the dendrograms
+- Adjust the minimum and maximum values corresponding to the extreme ends of the colour bar
+- Adjust the colourbar position and size
 
+### Downloads
+
+You may download the clustergram figures as pdf files below the figures.
  ''')
 
 df_dict, df_names = file_upload()
@@ -153,7 +168,7 @@ if show_df:
     for k, v in df_dict.items():
         st.markdown(f"**{k}**")
         st.info("Click anywhere within the dataframe and use Cmd+F or Ctrl+F to search the dataframe.")
-        st.write(v.astype(str))
+        st.write(v)
 df_dict, log2fc_dict = data_handler(df_dict, df_names)
 
 cluster_exp = st.sidebar.expander("Clustermap options", expanded=True)
@@ -175,18 +190,20 @@ z_cluster, fc_cluster = st.tabs(["Z-score clustermap", 'Log2FC clustermap'])
 
 with z_cluster:
     if aesthetics_complete:
-        cluster(df_dict, z_score=0, datatype='z-score',
+        zfig = cluster(df_dict, z_score=0, datatype='z-score',
         width=width, height=height,
         dendrogram_r = dendrogram_r, dendrogram_c=dendrogram_c,
         vminmax=vminmax,
         cbar_left=cbar_left, cbar_bottom=cbar_bottom, cbar_width=cbar_width, cbar_height=cbar_height
         )
+        create_pdf(zfig, "zscore_clustergram")
 
 with fc_cluster:
     if aesthetics_complete:
-        cluster(log2fc_dict, datatype='log2FC',
+        fcfig = cluster(log2fc_dict, datatype='log2FC',
         z_score=None, width=width, height=height,
         dendrogram_r = dendrogram_r, dendrogram_c=dendrogram_c,
         vminmax=vminmax,
         cbar_left=cbar_left, cbar_bottom=cbar_bottom, cbar_width=cbar_width, cbar_height=cbar_height
         )
+        create_pdf(fcfig, "log2FC_clustergram")
