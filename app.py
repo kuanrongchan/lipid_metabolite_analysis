@@ -142,7 +142,7 @@ def create_pdf(fig, fn, graph_module = "pyplot"):
 
 ######## CONTROL FLOW ###########
 
-st.header("Mass Spectrometry Clustermap")
+st.header("Mass Spectrometry Clustermap web tool")
 st.markdown('''
 
 ### Instructions to use web tool
