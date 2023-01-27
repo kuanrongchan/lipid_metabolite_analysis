@@ -144,26 +144,20 @@ def create_pdf(fig, fn, graph_module = "pyplot"):
 
 st.header("Mass Spectrometry Clustermap")
 st.markdown('''
-## Usage
 
-### Data management
+## Instructions to use web tool
 
-1. Upload mass spectrometry csv or xlsx files (without log-transformation)
-2. Transpose your dataset if your subjects are in rows and metabolites are in columns
-3. Use the data manager expander to filter out any metabolites or subjects
-4. Select the subjects to be used as controls for log2 fold-change calculation (subject vs averaged control)
-5. Tick the finished filtering checkbox once filtering is complete
+1. Upload raw intensity values from mass spectrometry readouts. Data can be uploaded as csv or xlsx files.
+2. Ensure that the metabolites are labelled in the first column, and the expression values on the subsequent columns. You may use the web tool to transpose your dataset if the metabolites are in columns.
+3. Use the data management expander on the side bar to filter out any metabolites or samples
+4. Select the samples that are used as controls. This step is required to plot clustergrams expressed as log2FC values (samples vs controls)
+5. Click on the finished filtering checkbox once the settings are finalised.
 
-### Clustermap aesthetics
+### Clustermap aesthetics and downloads
 
-- Adjust the clustermap's width and height
-- Adjust the relative lengths and heights of the dendrograms
-- Adjust the minimum and maximum values corresponding to the extreme ends of the colour bar
-- Adjust the colourbar position and size
+- Users can adjust the clustermap dimensions, dendrogram lengths and heights, range of values to be plotted and the colourbar position and size
 
-### Downloads
-
-You may download the clustergram figures as pdf files below the figures.
+- You may download the clustergram figures as pdf files by clicking on the download button present at the bottom of the clustergrams.
  ''')
 
 df_dict, df_names = file_upload()
