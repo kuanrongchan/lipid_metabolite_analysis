@@ -145,7 +145,7 @@ def create_pdf(fig, fn, graph_module = "pyplot"):
 st.header("Mass Spectrometry Clustermap")
 st.markdown('''
 
-## Instructions to use web tool
+### Instructions to use web tool
 
 1. Upload raw intensity values from mass spectrometry readouts. Data can be uploaded as csv or xlsx files.
 2. Ensure that the metabolites are labelled in the first column, and the expression values on the subsequent columns. You may use the web tool to transpose your dataset if the metabolites are in columns.
